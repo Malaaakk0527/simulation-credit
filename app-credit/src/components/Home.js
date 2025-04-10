@@ -1,87 +1,103 @@
 import React from 'react';
-import { Row, Col, Typography, Button, Card } from 'antd';
+import { Row, Col, Typography, Button, Card, Carousel } from 'antd';
 import { Link } from 'react-router-dom';
-import SimulationConsommation from './SimulationConsommation';
-import Simulation2 from './Simulation2';
 
 const { Title, Paragraph } = Typography;
 
+const carouselImages = [
+  '/images/slide_3.jpg',
+  '/images/slide_2.jpg',
+  '/images/slide_1.jpg',
+];
+
 const Home = () => {
   return (
-    <div 
-      style={{
-        padding: '50px', 
-        backgroundImage: 'url(/images/photo-1.avif)', // Lien vers une image valide
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        minHeight: '100vh', // Permet d'étirer le fond sur toute la hauteur de la page
-      }}
-    >
-      {/* Contenu principal de la page d'accueil */}
-      <Row justify="center" style={{ marginBottom: '50px' }}>
-        <Col span={16} style={{ textAlign: 'center' }}>
-          <Title level={2} style={{ color: '#002A5C' }}>Bienvenue à Ma Banque</Title>
+    <div style={{ backgroundColor: '#f5f5f5' }}>
+      {/* --- Carousel --- */}
+      <Carousel autoplay effect="fade" style={{ marginBottom: '200px' }}>
+        {carouselImages.map((img, index) => (
+          <div key={index}>
+            <div
+              style={{
+                height: '70vh',
+                backgroundImage: `url(${img})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                display: 'flex',
+                alignItems: '',
+                justifyContent: 'center',
+                color: '#fff',
+                fontSize: '2em',
+                fontWeight: 'bold',
+                textShadow: '2px 2px 5px rgba(0,0,0,0.7)',
+              }}
+            >
+             
+            </div>
+          </div>
+        ))}
+      </Carousel>
+
+      {/* --- Intro --- */}
+      <Row justify="center" style={{ marginBottom: '40px' }}>
+        <Col span={20} style={{ textAlign: 'center' }}>
+          <Title level={2} style={{ color: '#003366' }}>Simplifiez votre vie financière</Title>
           <Paragraph style={{ fontSize: '18px', color: '#666' }}>
-            Gérez vos finances, découvrez nos produits et services bancaires, et faites des simulations de crédit.
+            Des solutions bancaires innovantes, des crédits personnalisés, et un accompagnement sur mesure.
           </Paragraph>
         </Col>
       </Row>
 
-      {/* Section de choix de crédits */}
-      <Row gutter={16} justify="center" style={{ marginBottom: '50px' }}>
-        {/* Crédit Immobilier */}
+      {/* --- Services Cards --- */}
+      <Row gutter={[24, 24]} justify="center" style={{ padding: '0 50px' }}>
         <Col xs={24} sm={12} md={8}>
           <Card
             title="Crédit Immobilier"
-            
             hoverable
-            style={{ textAlign: 'center' }}
+            style={{ textAlign: 'center', borderRadius: '10px' }}
+            cover={<img alt="Crédit Immobilier" src="/images/immobilier.jpg" />}
           >
             <Paragraph>
-              Vous souhaitez acheter un bien immobilier ? Découvrez nos solutions de crédit immobilier avec des taux compétitifs.
+              Investissez dans l’immobilier avec des taux adaptés et une simulation rapide.
             </Paragraph>
-          <Link to='/Simulation2'>
-  <Button type="primary" style={{ marginTop: '10px' }}>
-    Simuler
-  </Button>
-</Link>
+            <Link to="/simulation-Immobillier">
+              <Button type="primary">Simuler</Button>
+            </Link>
           </Card>
         </Col>
 
-        {/* Crédit Consommation */}
         <Col xs={24} sm={12} md={8}>
           <Card
-         
             title="Crédit Consommation"
-            
             hoverable
-            style={{ textAlign: 'center' }}
+            style={{ textAlign: 'center', borderRadius: '10px' }}
+            cover={<img alt="Crédit Consommation" src="/images/consommation.jpg" />}
           >
             <Paragraph>
-              Besoin de financer vos projets personnels ? Explorez nos options de crédit consommation adaptées à vos besoins.
+              Financez vos projets personnels en toute tranquillité avec notre crédit souple.
             </Paragraph>
-            <Link to='/simulation-consommation'>
-  <Button type="primary" style={{ marginTop: '10px' }}>
-    Simuler
-  </Button>
-</Link>
-
+            <Link to="/simulation-consommation">
+              <Button type="primary">Simuler</Button>
+            </Link>
           </Card>
         </Col>
       </Row>
 
-      {/* Section Contact à la fin de la page d'accueil */}
-      <div id="contact" style={{ backgroundColor: '#002A5C', color: '#fff', padding: '50px 20px', marginTop: '50px' }}>
-        <Row justify="center">
-          <Col span={16} style={{ textAlign: 'center' }}>
-            <Title level={2} style={{ color: '#fff' }}>Contactez-Nous</Title>
-            <Paragraph style={{ fontSize: '18px', color: '#fff' }}>
-              
-              Vous pouvez nous joindre par téléphone au <strong>01 23 45 67 89</strong>
-            </Paragraph>
-          </Col>
-        </Row>
+      {/* --- Section Contact --- */}
+      <div
+        id="contact"
+        style={{
+          backgroundColor: 'black',
+          color: 'white',
+          padding: '60px 20px',
+          marginTop: '60px',
+          textAlign: 'center',
+        }}
+      >
+        <Title level={2} style={{ color: '#fff' }}>Besoin d'aide ?</Title>
+        <Paragraph style={{ fontSize: '18px' }}>
+          Contactez notre service client au <strong>+212 5 22 43 21 00</strong> ou écrivez-nous à <strong>support@mabanque.com</strong>
+        </Paragraph>
       </div>
     </div>
   );

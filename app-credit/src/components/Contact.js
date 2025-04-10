@@ -10,7 +10,7 @@ export default function Services() {
     <Layout
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(to right, #ffcc00)', // Dégradé de bleu et jaune
+        background: 'linear-gradient(to right,rgba(125, 108, 96, 0.7))', 
       }}
     >
       <Layout.Content
@@ -51,7 +51,7 @@ export default function Services() {
           <Col span={8}>
             <Card
               hoverable
-              cover={<img alt="Compte Bancaire" src="/images/photo-1551260627-fd1b6daa6224.avif" />}
+              cover={<img alt="Compte Bancaire" src="/images/photo-15.avif" />}
               style={{
                 borderRadius: '8px',
                 backgroundColor: '#fff',
@@ -72,7 +72,7 @@ export default function Services() {
           <Col span={8}>
             <Card
               hoverable
-              cover={<img alt="Crédit Immobilier" src="/images/Al-Barid-Bank.webp" />}
+              cover={<img alt="Crédit " src="/images/Al-Barid-Bank.webp" />}
               style={{
                 borderRadius: '8px',
                 backgroundColor: '#fff',

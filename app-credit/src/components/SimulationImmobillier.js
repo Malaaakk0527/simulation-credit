@@ -4,7 +4,7 @@ import 'antd/dist/reset.css'; // Import du style d'Ant Design
 
 const { Title } = Typography;
 
-export default function Simulation2() {
+export default function SimulationImmobillier() {
   // États pour chaque champ du formulaire
   const [montant, setMontant] = useState('');
   const [taux, setTaux] = useState('');
