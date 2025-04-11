@@ -24,16 +24,8 @@ const Home = () => {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 display: 'flex',
-                alignItems: '',
-                justifyContent: 'center',
-                color: '#fff',
-                fontSize: '2em',
-                fontWeight: 'bold',
-                textShadow: '2px 2px 5px rgba(0,0,0,0.7)',
               }}
-            >
-             
-            </div>
+            />
           </div>
         ))}
       </Carousel>
@@ -60,9 +52,11 @@ const Home = () => {
             <Paragraph>
               Investissez dans l’immobilier avec des taux adaptés et une simulation rapide.
             </Paragraph>
-            <Link to="/simulation-Immobillier">
-              <Button type="primary">Simuler</Button>
-            </Link>
+            <Link to="/simulation/immobilier">
+  <Button type="primary">Simuler</Button>
+</Link>
+
+
           </Card>
         </Col>
 
@@ -76,29 +70,13 @@ const Home = () => {
             <Paragraph>
               Financez vos projets personnels en toute tranquillité avec notre crédit souple.
             </Paragraph>
-            <Link to="/simulation-consommation">
-              <Button type="primary">Simuler</Button>
-            </Link>
+
+<Link to="/simulation/consommation">
+  <Button type="primary">Simuler</Button>
+</Link>
           </Card>
         </Col>
       </Row>
-
-      {/* --- Section Contact --- */}
-      <div
-        id="contact"
-        style={{
-          backgroundColor: 'black',
-          color: 'white',
-          padding: '60px 20px',
-          marginTop: '60px',
-          textAlign: 'center',
-        }}
-      >
-        <Title level={2} style={{ color: '#fff' }}>Besoin d'aide ?</Title>
-        <Paragraph style={{ fontSize: '18px' }}>
-          Contactez notre service client au <strong>+212 5 22 43 21 00</strong> ou écrivez-nous à <strong>support@mabanque.com</strong>
-        </Paragraph>
-      </div>
     </div>
   );
 };

@@ -6,7 +6,7 @@ const { Title, Paragraph, Link } = Typography;
 
 export default function Piedage() {
   return (
-    <AntFooter style={{ backgroundColor: '#5D4037', color: '#fff', padding: '40px 50px' }}>
+    <AntFooter style={{ backgroundColor: '#A76844', color: '#fff', padding: '40px 50px' }}>
       <Row gutter={[32, 16]}>
         {/* Colonne 1 : À propos */}
         <Col xs={24} sm={12} md={8}>
@@ -30,7 +30,7 @@ export default function Piedage() {
         <Col xs={24} sm={24} md={8}>
           <Title level={4} style={{ color: '#fff' }}>Contact</Title>
           <Paragraph style={{ color: '#f5f5f5' }}>
-            Email : contact@banqueexemple.com<br />
+            Email : baridbank@gmail.com<br />
             Téléphone : +212 5 22 43 21 00<br />
             Adresse : 123 Avenue Mohammed V, Casablanca
           </Paragraph>
@@ -39,7 +39,7 @@ export default function Piedage() {
 
       {/* Copyright */}
       <div style={{ textAlign: 'center', marginTop: '30px', color: '#d7ccc8' }}>
-        © {new Date().getFullYear()} BanqueExemple. Tous droits réservés.
+        © {new Date().getFullYear()} BaridBank. Tous droits réservés.
       </div>
     </AntFooter>
   );

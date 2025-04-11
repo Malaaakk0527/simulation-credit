@@ -10,7 +10,7 @@ export default function Services() {
     <Layout
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(to right,rgba(125, 108, 96, 0.7))', 
+        background: 'linear-gradient(to right,rgba(0, 0, 0, 0.1))', 
       }}
     >
       <Layout.Content
