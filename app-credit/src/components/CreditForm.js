@@ -42,10 +42,11 @@ const CreditForm = () => {
       montant,
       duree,
       typeBien: creditType === 'immobilier' ? typeBien : null,
+      nom: creditType === 'immobilier' ? 'Crédit Immobilier' : 'Crédit Consommation'
     };
 
     try {
-      const response = await fetch(`http://localhost/api/simulation/${creditType}`, {
+      const response = await fetch(`http://localhost:8000/credit-types`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
