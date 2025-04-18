@@ -1,0 +1,134 @@
+.navbar {
+    background-color: #ffd700; /* Jaune doré */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    height: 70px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1000;
+}
+  
+.navbar-logo {
+    display: flex;
+    align-items: center;
+}
+  
+.logo-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 12px;
+}
+  
+.logo-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: #1a2238;
+}
+  
+.navbar-menu {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+  
+.menu-list {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+  
+.menu-list li {
+    position: relative;
+    margin-left: 20px;
+}
+  
+.menu-list li a,
+.menu-list li span {
+    text-decoration: none;
+    color: #1a2238;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 15px;
+    display: block;
+}
+  
+.menu-list li a:hover,
+.menu-list li span:hover {
+    color: #007bff;
+}
+  
+.menu-list li.active a {
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+}
+  
+/* Style pour le menu déroulant */
+.dropdown {
+    position: relative;
+}
+  
+.dropdown-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    color: #1a2238;
+    font-size: 16px;
+    font-weight: 500;
+}
+  
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    padding: 8px 0;
+    margin: 0;
+    min-width: 180px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+  
+.dropdown:hover .dropdown-menu {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+  
+.dropdown-menu li {
+    margin: 0;
+    transition: background-color 0.2s ease;
+}
+  
+.dropdown-menu li a,
+.dropdown-menu li span {
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #1a2238;
+    display: block;
+    transition: all 0.2s ease;
+}
+  
+.dropdown-menu li a:hover,
+.dropdown-menu li span:hover {
+    background-color: #f5f5f5;
+    color: #007bff;
+    padding-left: 25px;
+}
+  
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

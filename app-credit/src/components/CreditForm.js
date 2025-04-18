@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Form, Slider, Button, Typography, message } from "antd";
-
-const { Title } = Typography;
+import "./CreditForm.css";
 
 const CreditForm = () => {
   const { creditType } = useParams();
@@ -10,22 +8,27 @@ const CreditForm = () => {
 
   const [montant, setMontant] = useState(5000);
   const [duree, setDuree] = useState(12); // en mois
-  const [result, setResult] = useState(null);
+  const [taux, setTaux] = useState(creditType === "immobilier" ? 4.5 : 6.5);
+  const [mensualite, setMensualite] = useState(0);
+  const [totalRemboursement, setTotalRemboursement] = useState(0);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Configurations selon le type
   const config = {
     immobilier: {
       minMontant: 5000,
       maxMontant: 10000000,
       minDuree: 12,
       maxDuree: 25 * 12,
+      taux: 4.5,
     },
     consommation: {
       minMontant: 5000,
       maxMontant: 300000,
       minDuree: 12,
       maxDuree: 7 * 12,
+      taux: 6.5,
     },
   };
 
@@ -33,59 +36,111 @@ const CreditForm = () => {
 
   useEffect(() => {
     if (!rules) navigate("/");
+    setTaux(rules?.taux || 0);
+    
+    // Vérifier l'authentification
+    const checkAuth = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // Vérifier si le token est valide
+        fetch('http://localhost:8000/api/user', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => {
+          setIsAuthenticated(response.ok);
+        })
+        .catch(() => {
+          setIsAuthenticated(false);
+          localStorage.removeItem('token');
+        });
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
   }, [creditType, navigate, rules]);
 
-  const handleSubmit = async (e) => {
+  const handleSimulate = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const formData = {
-      montant,
-      duree,
-      typeBien: creditType === "immobilier" ? "appartement" : null,
-    };
-
     try {
-      // Utiliser Axios ou Fetch pour envoyer la requête au backend
-      const response = await fetch(
-        `http://localhost:8000/simulation/${creditType}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            "X-Requested-With": "XMLHttpRequest",
-            "X-CSRF-TOKEN": document
-              .querySelector('meta[name="csrf-token"]')
-              .getAttribute("content"),
-          },
-          credentials: "include",
-          body: JSON.stringify(formData),
+      const token = localStorage.getItem('token');
+      if (!token) {
+        if (window.confirm('Vous devez être connecté pour faire une simulation. Voulez-vous vous connecter maintenant ?')) {
+          navigate('/login');
         }
-      );
-
-      // Log complet de la réponse pour debugging
-      console.log("Status:", response.status);
-      console.log("Headers:", response.headers);
-
-      const data = await response.json();
-      console.log("Response data:", data);
-
-      if (response.ok) {
-        setResult(data);
-        message.success("Simulation effectuée avec succès !");
-      } else {
-        // Détail du message d'erreur
-        const errorMsg =
-          data.message || data.error || "Une erreur est survenue";
-        message.error(errorMsg);
-        console.error("Erreur détaillée:", data);
+        return;
       }
+
+      // Appel à l'API pour le calcul
+      const calculateResponse = await fetch('http://localhost:8000/api/simulations/calculate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          montant: parseFloat(montant),
+          duree: parseInt(duree),
+          taux: parseFloat(taux),
+          id_type_credit: creditType === 'immobilier' ? 1 : 2
+        })
+      });
+
+      if (!calculateResponse.ok) {
+        if (calculateResponse.status === 401) {
+          setIsAuthenticated(false);
+          localStorage.removeItem('token');
+          throw new Error('Session expirée. Veuillez vous reconnecter.');
+        }
+        const errorData = await calculateResponse.json();
+        throw new Error(errorData.message || 'Erreur lors du calcul');
+      }
+
+      const calculateData = await calculateResponse.json();
+      setMensualite(calculateData.mensualites);
+      setTotalRemboursement(calculateData.total_a_rembourser);
+      setShowResults(true);
+
+      // Sauvegarder la simulation
+      const saveResponse = await fetch('http://localhost:8000/api/simulations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          montant: parseFloat(montant),
+          duree: parseInt(duree),
+          taux: parseFloat(taux),
+          mensualites: calculateData.mensualites,
+          total_a_rembourser: calculateData.total_a_rembourser,
+          id_type_credit: creditType === 'immobilier' ? 1 : 2
+        })
+      });
+
+      if (!saveResponse.ok) {
+        if (saveResponse.status === 401) {
+          setIsAuthenticated(false);
+          localStorage.removeItem('token');
+          throw new Error('Session expirée. Veuillez vous reconnecter.');
+        }
+        const errorData = await saveResponse.json();
+        throw new Error(errorData.message || 'Erreur lors de la sauvegarde');
+      }
+
+      // Rediriger vers l'historique
+      navigate('/history');
     } catch (error) {
-      console.error("Erreur de requête:", error);
-      message.error(
-        `Erreur: ${error.message || "Problème de connexion au serveur"}`
-      );
+      console.error('Erreur détaillée:', error);
+      alert(error.message || 'Une erreur est survenue');
     } finally {
       setLoading(false);
     }
@@ -94,91 +149,65 @@ const CreditForm = () => {
   if (!rules) return null;
 
   return (
-    <div style={{ padding: "20px", backgroundColor: "#f5f5f5" }}>
-      <Title level={3}>
-        Simulation de{" "}
-        {creditType === "immobilier"
-          ? "Crédit Immobilier"
-          : "Crédit Consommation"}
-      </Title>
+    <div className="credit-form-container">
+      <div className="credit-form-card">
+        <h2 className="credit-form-title">
+          Simulation de {creditType === "immobilier" ? "Crédit Immobilier" : "Crédit Consommation"}
+        </h2>
 
-      <Form
-        onSubmitCapture={handleSubmit}
-        layout="vertical"
-        style={{ maxWidth: "600px", margin: "0 auto" }}>
-        <Form.Item
-          label={`Montant du Crédit : ${montant.toLocaleString()} MAD`}>
-          <Slider
-            min={rules.minMontant}
-            max={rules.maxMontant}
-            step={1000}
-            value={montant}
-            tooltip={{ open: true }}
-            onChange={(value) => setMontant(value)}
+        <form onSubmit={handleSimulate} className="credit-form">
+          <div className="form-group">
+            <label htmlFor="montant">Montant : {montant.toLocaleString()} MAD</label>
+            <input
+              type="range"
+              id="montant"
+              min={rules.minMontant}
+              max={rules.maxMontant}
+              step={100}
+              value={montant}
+              onChange={(e) => setMontant(Number(e.target.value))}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="duree">Durée : {duree} mois</label>
+            <input
+              type="range"
+              id="duree"
+              min={rules.minDuree}
+              max={rules.maxDuree}
+              step={5}
+              value={duree}
+              onChange={(e) => setDuree(Number(e.target.value))}
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            className="submit-button"
             disabled={loading}
-          />
-        </Form.Item>
+          >
+            {loading ? 'Calcul en cours...' : 'Simuler'}
+          </button>
 
-        <Form.Item
-          label={`Durée : ${(duree / 12).toFixed(1)} ans (${duree} mois)`}>
-          <Slider
-            min={rules.minDuree}
-            max={rules.maxDuree}
-            step={12}
-            value={duree}
-            tooltip={{ open: true }}
-            onChange={(value) => setDuree(value)}
-            disabled={loading}
-          />
-        </Form.Item>
-
-        <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
-            Simuler
-          </Button>
-        </Form.Item>
-      </Form>
-
-      {result && (
-        <div
-          style={{
-            marginTop: "30px",
-            padding: "20px",
-            backgroundColor: "#fff",
-            borderRadius: "5px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-          }}>
-          <h3>Résultat de la simulation</h3>
-          <p>
-            💸 Mensualité estimée : <strong>{result.mensualites} MAD</strong>
-          </p>
-          <p>
-            📄 Type de crédit :{" "}
-            <strong>
-              {result.typeCredit ||
-                (creditType === "immobilier"
-                  ? "Crédit Immobilier"
-                  : "Crédit Consommation")}
-            </strong>
-          </p>
-          {result.montant && (
-            <p>
-              💰 Montant :{" "}
-              <strong>{result.montant.toLocaleString()} MAD</strong>
-            </p>
+          {showResults && (
+            <div className="results-section">
+              <div className="result-item">
+                <span className="result-label">Taux d'intérêt :</span>
+                <span className="result-value">{taux}%</span>
+              </div>
+              <div className="result-item">
+                <span className="result-label">Mensualité :</span>
+                <span className="result-value">{mensualite.toFixed(2)} MAD</span>
+              </div>
+              <div className="result-item">
+                <span className="result-label">Total à rembourser :</span>
+                <span className="result-value">{totalRemboursement.toFixed(2)} MAD</span>
+              </div>
+            </div>
           )}
-          {result.duree && (
-            <p>
-              ⏱️ Durée : <strong>{result.duree} ans</strong>
-            </p>
-          )}
-          {result.taux && (
-            <p>
-              📊 Taux d'intérêt : <strong>{result.taux}%</strong>
-            </p>
-          )}
-        </div>
-      )}
+        </form>
+      </div>
     </div>
   );
 };

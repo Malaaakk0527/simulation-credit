@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Table, Tag, Empty, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import './History.css';
 
 const { Title } = Typography;
 
@@ -13,7 +14,7 @@ const History = () => {
     const token = localStorage.getItem('token');
     if (!token) {
       message.error('Vous devez être connecté pour accéder à cette page');
-      navigate('/login');  // Redirect to login if not authenticated
+      navigate('/login');
       return;
     }
 
@@ -23,7 +24,7 @@ const History = () => {
   const fetchHistory = async (token) => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8000/api/simulations/history', {
+      const response = await fetch('http://localhost:8000/api/simulations', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -40,10 +41,11 @@ const History = () => {
       }
 
       const data = await response.json();
-      setSimulations(data);
+      setSimulations(data || []);
     } catch (error) {
       console.error('Error fetching history:', error);
       message.error('Erreur lors de la récupération de l\'historique');
+      setSimulations([]);
     } finally {
       setLoading(false);
     }
@@ -54,7 +56,14 @@ const History = () => {
       title: 'Date',
       dataIndex: 'created_at',
       key: 'created_at',
-      render: text => new Date(text).toLocaleDateString('fr-FR'),
+      render: text => new Date(text).toLocaleDateString('fr-FR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }),
+      sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
     },
     {
       title: 'Type de crédit',
@@ -71,6 +80,7 @@ const History = () => {
       dataIndex: 'montant',
       key: 'montant',
       render: text => `${parseInt(text).toLocaleString()} MAD`,
+      sorter: (a, b) => a.montant - b.montant,
     },
     {
       title: 'Durée',
@@ -83,48 +93,58 @@ const History = () => {
           ? `${years} an${years > 1 ? 's' : ''}${remainingMonths > 0 ? ` et ${remainingMonths} mois` : ''}`
           : `${months} mois`;
       },
+      sorter: (a, b) => a.duree - b.duree,
     },
     {
       title: 'Taux',
       dataIndex: 'taux',
       key: 'taux',
       render: text => `${text}%`,
+      sorter: (a, b) => a.taux - b.taux,
     },
     {
       title: 'Mensualité',
       dataIndex: 'mensualites',
       key: 'mensualites',
       render: text => `${parseFloat(text).toLocaleString()} MAD`,
+      sorter: (a, b) => a.mensualites - b.mensualites,
     },
     {
       title: 'Total à rembourser',
       dataIndex: 'total_a_rembourser',
       key: 'total_a_rembourser',
       render: text => `${parseFloat(text).toLocaleString()} MAD`,
+      sorter: (a, b) => a.total_a_rembourser - b.total_a_rembourser,
     },
   ];
 
   return (
-    <div style={{ padding: '20px', backgroundColor: '#f5f5f5', minHeight: 'calc(100vh - 140px)' }}>
-      <Title level={2} style={{ marginBottom: '30px', textAlign: 'center' }}>
+    <div className="history-container">
+      <Title level={2} className="history-title">
         Historique de vos simulations
       </Title>
 
-      {simulations.length > 0 ? (
-        <Table 
-          dataSource={simulations} 
-          columns={columns}
-          loading={loading}
-          rowKey="id_simulation"
-          pagination={{ pageSize: 10 }}
-          style={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
-        />
-      ) : !loading ? (
-        <Empty 
-          description="Vous n'avez pas encore effectué de simulation" 
-          style={{ marginTop: '50px' }}
-        />
-      ) : null}
+      <div className="table-card">
+        {simulations.length > 0 ? (
+          <Table 
+            dataSource={simulations} 
+            columns={columns}
+            loading={loading}
+            rowKey="id_simulation"
+            pagination={{ 
+              pageSize: 10,
+              showSizeChanger: true,
+              showTotal: (total) => `Total: ${total} simulations`
+            }}
+            scroll={{ x: 'max-content' }}
+          />
+        ) : !loading ? (
+          <Empty 
+            description="Aucune simulation trouvée" 
+            style={{ marginTop: '50px' }}
+          />
+        ) : null}
+      </div>
     </div>
   );
 };

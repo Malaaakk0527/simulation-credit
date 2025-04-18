@@ -1,82 +1,72 @@
 import React from 'react';
-import { Row, Col, Typography, Button, Card, Carousel } from 'antd';
 import { Link } from 'react-router-dom';
-
-const { Title, Paragraph } = Typography;
-
-const carouselImages = [
-  '/images/slide_3.jpg',
-  '/images/slide_2.jpg',
-  '/images/slide_1.jpg',
-];
+import { Carousel } from 'antd';
+import './Home.css';
 
 const Home = () => {
+  const carouselImages = [
+    '/images/slide_1.jpg',
+    '/images/slide_2.jpg',
+    '/images/slide_3.jpg'
+  ];
+
+  const services = [
+    {
+      title: 'Crédit Immobilier',
+      image: '/images/immobilier.jpg',
+      description: 'Investissez dans l\'immobilier avec des taux adaptés et une simulation rapide.',
+      link: '/simulation/immobilier'
+    },
+    {
+      title: 'Crédit Consommation',
+      image: '/images/consommation.jpg',
+      description: 'Financez vos projets personnels en toute tranquillité avec notre crédit souple.',
+      link: '/simulation/consommation'
+    }
+  ];
+
   return (
-    <div style={{ backgroundColor: '#f5f5f5' }}>
-      {/* --- Carousel --- */}
-      <Carousel autoplay effect="fade" style={{ marginBottom: '200px' }}>
-        {carouselImages.map((img, index) => (
-          <div key={index}>
-            <div
-              style={{
-                height: '70vh',
-                backgroundImage: `url(${img})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                display: 'flex',
-              }}
-            />
-          </div>
-        ))}
-      </Carousel>
+    <div className="home-container">
+      {/* Carousel Section */}
+      <div className="carousel-container">
+        <Carousel autoplay effect="fade">
+          {carouselImages.map((image, index) => (
+            <div key={index}>
+              <div
+                className="carousel-slide"
+                style={{ backgroundImage: `url(${image})` }}
+              />
+            </div>
+          ))}
+        </Carousel>
+      </div>
 
-      {/* --- Intro --- */}
-      <Row justify="center" style={{ marginBottom: '40px' }}>
-        <Col span={20} style={{ textAlign: 'center' }}>
-          <Title level={2} style={{ color: '#003366' }}>Simplifiez votre vie financière</Title>
-          <Paragraph style={{ fontSize: '18px', color: '#666' }}>
-            Des solutions bancaires innovantes, des crédits personnalisés, et un accompagnement sur mesure.
-          </Paragraph>
-        </Col>
-      </Row>
+      {/* Intro Section */}
+      <section className="intro-section">
+        <h2 className="intro-title">Simplifiez votre vie financière</h2>
+        <p className="intro-text">
+          Des solutions bancaires innovantes, des crédits personnalisés, et un accompagnement sur mesure.
+          Notre plateforme vous permet de simuler rapidement vos projets et de trouver la solution qui vous correspond.
+        </p>
+      </section>
 
-      {/* --- Services Cards --- */}
-      <Row gutter={[24, 24]} justify="center" style={{ padding: '0 50px' }}>
-        <Col xs={24} sm={12} md={8}>
-          <Card
-            title="Crédit Immobilier"
-            hoverable
-            style={{ textAlign: 'center', borderRadius: '10px' }}
-            cover={<img alt="Crédit Immobilier" src="/images/immobilier.jpg" />}
-          >
-            <Paragraph>
-              Investissez dans l’immobilier avec des taux adaptés et une simulation rapide.
-            </Paragraph>
-            <Link to="/simulation/immobilier">
-  <Button type="primary">Simuler</Button>
-</Link>
-
-
-          </Card>
-        </Col>
-
-        <Col xs={24} sm={12} md={8}>
-          <Card
-            title="Crédit Consommation"
-            hoverable
-            style={{ textAlign: 'center', borderRadius: '10px' }}
-            cover={<img alt="Crédit Consommation" src="/images/consommation.jpg" />}
-          >
-            <Paragraph>
-              Financez vos projets personnels en toute tranquillité avec notre crédit souple.
-            </Paragraph>
-
-<Link to="/simulation/consommation">
-  <Button type="primary">Simuler</Button>
-</Link>
-          </Card>
-        </Col>
-      </Row>
+      {/* Services Section */}
+      <section className="services-section">
+        <div className="services-grid">
+          {services.map((service, index) => (
+            <div key={index} className="service-card">
+              <img src={service.image} alt={service.title} className="service-image" />
+              <div className="service-content">
+                <h3 className="service-title">{service.title}</h3>
+                <p className="service-description">{service.description}</p>
+                <Link to={service.link} className="simulate-button">
+                  Simuler
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 };
