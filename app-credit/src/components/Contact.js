@@ -34,7 +34,7 @@ export default function Services() {
               style={{
                 borderRadius: '8px',
                 backgroundColor: '#fff',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                boxShadow: '0 4px 8px rgba(23, 84, 170, 0.49)',
                 transition: 'transform 0.3s',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
@@ -72,11 +72,11 @@ export default function Services() {
           <Col span={8}>
             <Card
               hoverable
-              cover={<img alt="Crédit " src="/images/Al-Barid-Bank.webp" />}
+              cover={<img alt="Crédit " src="/images/CREDIT.jpg" />}
               style={{
                 borderRadius: '8px',
                 backgroundColor: '#fff',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                boxShadow: '0 4px 8px rgba(23, 84, 170, 0.49)',
                 transition: 'transform 0.3s',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
