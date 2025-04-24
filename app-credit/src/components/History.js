@@ -24,9 +24,10 @@ const History = () => {
   const fetchHistory = async (token) => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8000/api/simulations', {
+      const response = await fetch('http://localhost:8000/api/getSimulations', {
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
         },
       });
 
@@ -41,7 +42,25 @@ const History = () => {
       }
 
       const data = await response.json();
-      setSimulations(data || []);
+      console.log('Données reçues de l\'API getSimulations:', data);
+      
+      const simulationsData = Array.isArray(data) ? data : [];
+      
+      const processedData = simulationsData.map(sim => {
+        const nombreMensualites = sim.duree * 12;
+        const coutTotal = sim.mensualite * nombreMensualites;
+        
+        const tauxAnnuel = sim.id_type_credit === 1 ? 4.2 : 6.5;
+        
+        return {
+          ...sim,
+          taux: tauxAnnuel,
+          total_a_rembourser: coutTotal
+        };
+      });
+      
+      console.log('Données transformées:', processedData);
+      setSimulations(processedData);
     } catch (error) {
       console.error('Error fetching history:', error);
       message.error('Erreur lors de la récupération de l\'historique');
@@ -79,42 +98,37 @@ const History = () => {
       title: 'Montant',
       dataIndex: 'montant',
       key: 'montant',
-      render: text => `${parseInt(text).toLocaleString()} MAD`,
+      render: text => `${parseFloat(text).toLocaleString()} MAD`,
       sorter: (a, b) => a.montant - b.montant,
     },
     {
       title: 'Durée',
       dataIndex: 'duree',
       key: 'duree',
-      render: months => {
-        const years = Math.floor(months / 12);
-        const remainingMonths = months % 12;
-        return years > 0 
-          ? `${years} an${years > 1 ? 's' : ''}${remainingMonths > 0 ? ` et ${remainingMonths} mois` : ''}`
-          : `${months} mois`;
-      },
+      render: years => `${years} an${years > 1 ? 's' : ''}`,
       sorter: (a, b) => a.duree - b.duree,
     },
     {
       title: 'Taux',
       dataIndex: 'taux',
       key: 'taux',
-      render: text => `${text}%`,
-      sorter: (a, b) => a.taux - b.taux,
+      render: (text, record) => `${record.id_type_credit === 1 ? '4.2' : '6.5'}%`,
     },
     {
       title: 'Mensualité',
-      dataIndex: 'mensualites',
-      key: 'mensualites',
+      dataIndex: 'mensualite',
+      key: 'mensualite',
       render: text => `${parseFloat(text).toLocaleString()} MAD`,
-      sorter: (a, b) => a.mensualites - b.mensualites,
+      sorter: (a, b) => a.mensualite - b.mensualite,
     },
     {
       title: 'Total à rembourser',
       dataIndex: 'total_a_rembourser',
       key: 'total_a_rembourser',
-      render: text => `${parseFloat(text).toLocaleString()} MAD`,
-      sorter: (a, b) => a.total_a_rembourser - b.total_a_rembourser,
+      render: (text, record) => {
+        const total = record.mensualite * (record.duree * 12);
+        return `${parseFloat(total).toLocaleString()} MAD`;
+      },
     },
   ];
 

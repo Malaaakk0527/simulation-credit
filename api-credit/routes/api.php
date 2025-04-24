@@ -34,7 +34,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Lancer un calcul de simulation (fonctionnalité protégée)
     Route::post('/simulations/calculate', [SimulationController::class, 'calculate']);
+    
+    // Enregistrer une simulation dans la base de données
+    Route::post('/simulations/save', [SimulationController::class, 'saveSimulation']);
 
     // Obtenir la liste des simulations enregistrées (fonctionnalité protégée)
-    Route::get('/simulations', [SimulationController::class, 'index']);
+   
+    Route::get('/getSimulations', [SimulationController::class, 'getSimulations']);
 });

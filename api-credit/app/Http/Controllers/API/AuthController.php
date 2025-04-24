@@ -14,21 +14,12 @@ class AuthController extends Controller
     // Register a new user
     public function register(Request $request)
     {
-        // Check if input is valid
-        $validator = Validator::make($request->all(), [
+        // Validation directe par Request
+        $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
-
-        // If input is invalid, return error
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid input',
-                'errors' => $validator->errors()
-            ], 422);
-        }
 
         // Create user
         $user = User::create([
@@ -52,20 +43,11 @@ class AuthController extends Controller
     // Login user
     public function login(Request $request)
     {
-        // Check if input is valid
-        $validator = Validator::make($request->all(), [
+        // Validation directe par Request
+        $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
-
-        // If input is invalid, return error
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid input',
-                'errors' => $validator->errors()
-            ], 422);
-        }
 
         // Check if email and password match
         if (!Auth::attempt($request->only('email', 'password'))) {

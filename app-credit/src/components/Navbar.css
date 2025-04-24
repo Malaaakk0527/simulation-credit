@@ -132,3 +132,59 @@
         transform: translateY(0);
     }
 }
+
+/* Styles pour les alertes SweetAlert2 */
+.swal2-popup {
+  border-radius: 15px !important;
+  padding: 1.5em !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.swal2-title {
+  font-size: 1.5em !important;
+  font-weight: 600 !important;
+  color: #2c3e50 !important;
+}
+
+.swal2-content {
+  font-size: 1em !important;
+  color: #7f8c8d !important;
+}
+
+/* Toast de succès */
+.swal-success-toast {
+  width: auto !important;
+  padding: 0.75em 1.5em !important;
+  max-width: 350px !important;
+  border-left: 4px solid #2ecc71 !important;
+}
+
+/* Animation d'entrée pour les alertes */
+.swal2-show {
+  animation: swal2-show 0.3s ease-out !important;
+}
+
+@keyframes swal2-show {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 500px) {
+  .swal2-popup {
+    padding: 1em !important;
+  }
+
+  .swal2-title {
+    font-size: 1.2em !important;
+  }
+
+  .swal2-content {
+    font-size: 0.9em !important;
+  }
+}

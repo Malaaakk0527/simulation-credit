@@ -1,17 +1,68 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 import "./Navbar.css";
 
 const Navbar = ({ user, onLogout }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    if (onLogout) {
-      onLogout();
-    }
-    navigate("/");
+  const handleLogout = async () => {
+    // Afficher une confirmation de déconnexion
+    Swal.fire({
+      title: 'Déconnexion',
+      text: 'Êtes-vous sûr de vouloir vous déconnecter?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3498db',
+      cancelButtonColor: '#7f8c8d',
+      confirmButtonText: 'Oui, me déconnecter',
+      cancelButtonText: 'Annuler'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const token = localStorage.getItem("token");
+        
+        if (token) {
+          try {
+            // Appel à l'API de déconnexion pour révoquer le token côté serveur
+            await fetch('http://localhost:8000/api/logout', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json'
+              }
+            });
+          } catch (error) {
+            console.error('Erreur lors de la déconnexion:', error);
+          }
+        }
+        
+        // Suppression du token côté client
+        localStorage.removeItem("token");
+        
+        if (onLogout) {
+          onLogout();
+        }
+        
+        // Afficher une notification de déconnexion réussie
+        Swal.fire({
+          icon: 'success',
+          title: 'Déconnecté!',
+          text: 'Vous avez été déconnecté avec succès.',
+          timer: 2000,
+          showConfirmButton: false,
+          position: 'top-end',
+          toast: true,
+          background: '#E8F6EF',
+          iconColor: '#2ecc71',
+          customClass: {
+            popup: 'swal-success-toast'
+          }
+        });
+        
+        navigate("/");
+      }
+    });
   };
 
   return (
