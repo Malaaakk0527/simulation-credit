@@ -228,7 +228,7 @@ const CreditForm = () => {
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
     doc.text(`Date: ${date}`, 20, 50);
-    doc.text(`Référence: SIM-${Math.floor(Math.random() * 10000)}`, pageWidth - 20, 50, { align: 'right' });
+    
     
     // Ligne séparatrice
     doc.setDrawColor(220, 220, 220);
@@ -283,16 +283,7 @@ const CreditForm = () => {
     
     doc.setFontSize(9);
     doc.setTextColor(100, 100, 100);
-    doc.text("Ce document est une simulation et ne constitue pas une offre de crédit.", pageWidth/2, footerY + 10, { align: 'center' });
-    doc.text("Pour plus d'informations, veuillez contacter notre service client.", pageWidth/2, footerY + 15, { align: 'center' });
-    
-    // Ajouter logo banque (simulé par un rectangle coloré)
-    doc.setFillColor(41, 128, 185);
-    doc.rect(pageWidth - 40, pageWidth - 40, 20, 20, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'bold');
-    doc.text("BANK", pageWidth - 30, pageWidth - 30, { align: 'center' });
+   
     
     // Enregistrer le PDF
     doc.save(`simulation_${title.toLowerCase().replace(' ', '_')}_${date.replace(/\//g, '-')}.pdf`);

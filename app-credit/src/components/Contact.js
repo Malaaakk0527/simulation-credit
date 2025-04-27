@@ -173,7 +173,7 @@ export default function Contact() {
           >
             <Title level={3} style={{ color: '#2c3e50', marginBottom: '25px', position: 'relative', paddingBottom: '15px' }}>
               Informations de contact
-              <div style={{ position: 'absolute', bottom: 0, left: 0, width: '50px', height: '3px', background: accentGradient }}></div>
+              <div style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '50px', height: '3px', background: accentGradient }}></div>
             </Title>
 
             <Row gutter={[30, 30]}>
@@ -231,20 +231,20 @@ export default function Contact() {
               overflow: 'hidden',
               padding: 0,
             }}
-           
           >
             <div style={{ width: '100%', height: '400px', position: 'relative' }}>
+              <div style={{ width: '100%', height: '400px' }}>
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d53528.82979850831!2d-7.664557795897115!3d33.59113916137287!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7d2855b9254c7%3A0x6ec6f26a00986894!2sAvenue%20Mohammed%20V%2C%20Casablanca%2C%20Maroc!5e0!3m2!1sfr!2sfr!4v1650985257599!5m2!1sfr!2sfr"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Localisation"
-              ></iframe>
-
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.947!2d-7.617966!3d33.582582!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDM0JzU3LjAiTiA3wrAzNycwNC43Ilc!5e0!3m2!1sen!2sma!4v1634567890123!5m2!1sen!2sma"
+  width="100%"
+  height="100%"
+  style={{ border: 0 }}
+  allowFullScreen
+  loading="lazy"
+  referrerPolicy="no-referrer-when-downgrade"
+  title="Localisation d'Al Barid Bank"
+></iframe>
+              </div>
               <div style={{
                 position: 'absolute',
                 bottom: 0,
