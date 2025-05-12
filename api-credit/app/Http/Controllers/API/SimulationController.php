@@ -29,13 +29,8 @@ class SimulationController extends Controller
         $tauxMensuel = $tauxAnnuel / 12;
         $nombreMensualites = $duree * 12;
     
-        // Vérification pour éviter une division par zéro
-        if ($tauxMensuel <= 0) {
-            return response()->json([
-                'success' => false,
-                'error' => 'Le taux doit être supérieur à 0.'
-            ], 400);
-        }
+       
+      
         
         $mensualite = $montant * ($tauxMensuel * pow(1 + $tauxMensuel, $nombreMensualites)) 
                      / (pow(1 + $tauxMensuel, $nombreMensualites) - 1);
@@ -67,7 +62,12 @@ class SimulationController extends Controller
         $id_type_credit = $request->id_type_credit;
         $mensualite = $request->mensualite;
         $userId = Auth::id();
-
+        // verifier mensualite si il est correcte 
+if{
+    $mensualite = $montant * ($tauxMensuel * pow(1 + $tauxMensuel, $nombreMensualites)) 
+                     / (pow(1 + $tauxMensuel, $nombreMensualites) - 1);
+}
+        
         try {
             $simulation = Simulation::create([
                 'id_user' => $userId,

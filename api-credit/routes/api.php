@@ -24,7 +24,7 @@ Route::post('/login', [AuthController::class, 'login']);       // Connexion d'un
 // Routes protégées : accessibles uniquement aux utilisateurs authentifiés via Sanctum
 Route::middleware('auth:sanctum')->group(function () {
 
-    // Récupérer les informations de l'utilisateur connecté (utile après un refresh côté frontend)
+    // Récupérer les informations de l'utilisateur connecté 
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
